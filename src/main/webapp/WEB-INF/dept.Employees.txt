@@ -1,0 +1,5 @@
+corporate=Headquarters
+frankie=Frank's personal contacts
+accounting=Accounting Dept
+sales=Sales Dept
+warehouse=Warehouse
