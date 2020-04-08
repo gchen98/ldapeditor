@@ -2,7 +2,7 @@
 ldapServerName=localhost
 rootContext=dc\=pioneerind,dc\=com
 peopleContext=ou\=Public
-rootdn=cn\=Manager
+rootdn=cn\=admin
 rootpass=cas98ey
 numtries=2
 secure=false
