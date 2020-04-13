@@ -1,8 +1,9 @@
-caseych=Casey's personal contacts
 garyc=Gary's personal contacts
+caseych=Casey's personal contacts
 elise=Elise's personal contacts
 julian=Julian's personal contacts
-frank=Frank's personal contacts
 alice=Alice's personal contacts
+frank=Frank's personal contacts
 bohu=Casey's and Gary's shared contacts
+chubses=Elise's and Julian's shared contacts
 family=Chen family contacts
