@@ -7,3 +7,4 @@ frank=Frank's personal contacts
 bohu=Casey's and Gary's shared contacts
 chubses=Elise's and Julian's shared contacts
 family=Chen family contacts
+deleted=Deleted from Google
