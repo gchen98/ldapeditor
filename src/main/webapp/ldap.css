@@ -1,13 +1,32 @@
 BODY, P, OL, UL, LI, TD, SELECT, INPUT, TEXTAREA {
- font-family: Arial, Helvetica, sans-serif;
- font-size: 1em;
- font-style: normal;
- color: #000000;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	font-style: normal;
+	color: white;
+	background-color: black;
+}
+/* hyperlinks*/
+A{
+	color: SkyBlue;
 }
 TH {
- font-family: Arial, Helvetica, sans-serif;
- font-weight: bold;
- font-size: 1em;
- font-style: normal;
- color: #000000;
+	font-weight: bold;
+	color: Black;
+	background-color: Chartreuse;
+}
+INPUT{
+	color: black;
+	background-color: white;
+}
+.grey_tr{
+ background-color: SlateGray;
+}
+.po_header{
+ background-color: Aquamarine;
+}
+.po_booking{
+ background-color: Bisque;
+}
+.po_container{
+ background-color: CornflowerBlue;
 }
