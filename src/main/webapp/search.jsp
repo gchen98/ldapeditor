@@ -1,7 +1,8 @@
 <%@page import="java.util.Enumeration" %>
+<%@page import="com.caseyandgary.ldapeditor.ldap.Contact" %>
 <%@page import="java.util.Properties" %>
 <%@page contentType="text/html;charset=UTF-8"%>
-<jsp:useBean id="contact" scope="request" class="web.ContactBean" />
+<jsp:useBean id="contact" scope="request" class="com.caseyandgary.ldapeditor.web.ContactBean" />
 <% request.setCharacterEncoding("UTF-8"); %>
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,7 +62,7 @@ if (resultsList!=null){
 	</tr>
           <%
           while (it.hasNext()) {
-		ldap.Contact nextContact = (ldap.Contact)it.next();
+		Contact nextContact = (Contact)it.next();
 		String cn = nextContact.getCn();
                 //String newcn = org.apache.commons.lang.StringEscapeUtils.escape(cn);
 		%>

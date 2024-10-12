@@ -6,9 +6,11 @@
 <tr>
 <td>
 <table>
-<th><td colspan="4" align="center">Names and company information</td></th>
 <tr>
-<td>Full:</td> <td > <input name="cn" type="text" size="20" value="<jsp:getProperty name="contact" property="cn"/>"/></td><td colspan="2"/>
+<th colspan="4" align="center">Names and company information</th>
+</tr>
+<tr>
+<td>Full:</td> <td > <input name="cn" type="text" size="40" value="<jsp:getProperty name="contact" property="cn"/>"/></td><td colspan="2"/>
 </tr>
 <tr>
 <td>First:</td><td><input name="firstName" type="text" size="20" value="<jsp:getProperty name="contact" property="firstName"/>"/></td><td>Last: </td><td><input name="lastName" type="text" size="20" value="<jsp:getProperty name="contact" property="lastName"/>"/></td>
@@ -23,7 +25,9 @@
 <!-- email section -->
 <tr><td>
 <table>
-<th><td colspan="2" align="center">E-mail addresses</td></th>
+<tr>
+<th colspan='2' align="center">E-mail addresses</th>
+</tr>
 <tr>
  <td><table>
   <tr><td>primary:</td><td><input name="email" type="text" size="20" value="<jsp:getProperty name="contact" property="email"/>"/></td></tr>
@@ -38,10 +42,12 @@
 <!-- phone section -->
 <tr> <td>
 <table>
-<th><td colspan="2" align="center">Phone Numbers</td></th>
+<tr>
+<th colspan='2' align="center">Phone Numbers</th>
+</tr>
 <tr>
  <td><table>
-  <th><td colspan="2" align="center">Primary</td></th>
+  <tr><th colspan="2" align="center">Primary</th></tr>
   <tr><td>work:</td><td><input name="businessPhone" type="text" size="20" value="<%=contact.getBusinessPhone(0)%>"/></td></tr>
   <tr><td>home:</td><td><input name="homePhone" type="text" size="20" value="<%=contact.getHomePhone(0)%>"/></td></tr>
   <tr><td>mobile:</td><td><input name="mobile" type="text" size="20" value="<%=contact.getMobile(0)%>"/></td></tr>
@@ -49,7 +55,7 @@
   <tr><td>fax:</td><td><input name="businessFax" type="text" size="20" value="<%=contact.getBusinessFax(0)%>"/></td></tr>
  </table></td>
  <td><table>
-  <th><td colspan="2" align="center">Secondary</td></th>
+  <tr><th colspan="2" align="center">Secondary</th></tr>
   <tr><td>work:</td><td><input name="businessPhone" type="text" size="20" value="<%=contact.getBusinessPhone(1)%>"/></td></tr>
   <tr><td>home:</td><td><input name="homePhone" type="text" size="20" value="<%=contact.getHomePhone(1)%>"/></td></tr>
   <tr><td>mobile:</td><td><input name="mobile" type="text" size="20" value="<%=contact.getMobile(1)%>"/></td></tr>
@@ -63,17 +69,19 @@
 <!-- address section -->
 <tr> <td>
 <table>
-<th><td colspan="2" align="center">Mailing addresses</td></th>
+<tr>
+<th colspan='2' align="center">Mailing addresses</th>
+</tr>
 <tr>
  <td><table>
-  <th><td colspan="2" align="center">work</td></th>
+  <tr><th colspan="2" align="center">work</th></tr>
   <tr><td>street:</td><td><input name="businessAddress" type="text" size="20" value="<jsp:getProperty name="contact" property="businessAddress"/>"/></td></tr>
   <tr><td>city:</td><td><input name="businessCity" type="text" size="20" value="<jsp:getProperty name="contact" property="businessCity"/>"/></td></tr>
   <tr><td>state:</td><td><input name="businessState" type="text" size="20" value="<jsp:getProperty name="contact" property="businessState"/>"/></td></tr>
   <tr><td>zip:</td><td><input name="businessZip" type="text" size="20" value="<jsp:getProperty name="contact" property="businessZip"/>"/></td></tr>
  </table></td>
  <td><table>
-  <th><td colspan="2" align="center">personal</td></th>
+  <tr><th colspan="2" align="center">personal</th></tr>
   <tr><td>street:</td><td><input name="homeAddress" type="text" size="20" value="<jsp:getProperty name="contact" property="homeAddress"/>"/></td></tr>
   <tr><td>city:</td><td><input name="homeCity" type="text" size="20" value="<jsp:getProperty name="contact" property="homeCity"/>"/></td></tr>
   <tr><td>state:</td><td><input name="homeState" type="text" size="20" value="<jsp:getProperty name="contact" property="homeState"/>"/></td></tr>
@@ -86,6 +94,9 @@
 <!-- admin section -->
 <tr>
 <td><table>
+<tr>
+<th colspan='2' align="center">Miscellaneous</th>
+</tr>
  <tr>
   <td>Notes: </td><td><input name="notes" type="text" size="40" value="<jsp:getProperty name="contact" property="notes"/>"/></td>
  </tr>
@@ -99,7 +110,7 @@
 <!-- contact group table -->
 <table>
 <tr>
-<th colspan="2"><b>Contact Group</b>&nbsp; <!--input type="button" name="deptbutton" value="Help" onclick="javascript:myPopup()"/-->: </td>
+<th  colspan="2"><b>Contact Group</b>&nbsp; <!--input type="button" name="deptbutton" value="Help" onclick="javascript:myPopup()"/--></td>
 </th>
 <!--input name="department" type="text" size="20" value="<jsp:getProperty name="contact" property="department"/>"/-->
 </tr>

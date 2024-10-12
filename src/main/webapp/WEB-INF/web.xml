@@ -19,7 +19,7 @@
 	    <param-value>true</param-value>
 	</init-param>
         <servlet-name>controller</servlet-name>
-        <servlet-class>web.Controller</servlet-class>
+        <servlet-class>com.caseyandgary.ldapeditor.web.Controller</servlet-class>
     </servlet>
 
     <servlet-mapping>

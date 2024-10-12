@@ -1,12 +1,14 @@
 package com.caseyandgary.ldapeditor.web;
 
 //import java.beans.*;
-import javax.servlet.http.*;
-import javax.servlet.*;
+//import javax.servlet.http.*;
+//import javax.servlet.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.*;
 import java.io.*;
 import java.util.*;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
+//import jakarta.naming.NamingException;
+//import jakarta.naming.directory.Attribute;
 
 import com.caseyandgary.ldapeditor.ldap.*;
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <html>
-<jsp:useBean id="contact" scope="request" class="web.ContactBean"/>
+<jsp:useBean id="contact" scope="request" class="com.caseyandgary.ldapeditor.web.ContactBean"/>
 <head><title>Pioneer Directory Administration Tool</title>
 <link rel="stylesheet" href="/ldapeditor/ldap.css" style="text/css"/>
 </head>

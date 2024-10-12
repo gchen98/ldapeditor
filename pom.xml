@@ -8,18 +8,37 @@
 	<version>1.0</version>
 	<packaging>war</packaging>
 	<dependencies>
+                <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+                <dependency>
+                    <groupId>jakarta.servlet</groupId>
+                    <artifactId>jakarta.servlet-api</artifactId>
+                    <version>5.0.0</version>
+                    <scope>provided</scope>
+                </dependency>
+<!--
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>compile</scope>
 		</dependency>
+-->
+<!-- https://mvnrepository.com/artifact/jakarta.servlet.jsp/jakarta.servlet.jsp-api -->
+<dependency>
+    <groupId>jakarta.servlet.jsp</groupId>
+    <artifactId>jakarta.servlet.jsp-api</artifactId>
+    <version>3.0.0</version>
+    <scope>provided</scope>
+</dependency>
+
+<!--
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.2.1-b03</version>
 			<scope>compile</scope>
 		</dependency>
+-->
 	</dependencies>
 	<build>
 		<plugins>

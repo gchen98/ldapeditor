@@ -180,7 +180,8 @@ public class LDAPConnector {
 			}
 			else {
 				java.net.Socket sock = CustomSocketFactory.currSocket;
-				sock.close();
+				if(sock!=null)sock.close();
+
 			}
 			//System.out.println("LDAP Context and socket closed");
 		}		

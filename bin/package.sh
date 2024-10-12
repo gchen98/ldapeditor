@@ -1,2 +1,3 @@
 mvn package
-sudo cp target/*.war /var/lib/tomcat9/webapps/
+sudo rm -fr /var/lib/tomcat10/webapps/ldapeditor
+sudo cp target/*.war /var/lib/tomcat10/webapps/

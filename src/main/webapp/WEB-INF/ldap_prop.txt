@@ -6,6 +6,7 @@ rootdn=cn\=admin
 rootpass=cas98ey
 numtries=2
 secure=false
-trustpath=/opt/java/apache-tomcat-7.0.32/webapps/ldapeditor/WEB-INF/pioneer.keys
+#trustpath=/opt/java/apache-tomcat-7.0.32/webapps/ldapeditor/WEB-INF/pioneer.keys
 #trustpath=z:\\docs\\development\\ldap\\webapps\\WEB-INF\\pioneer.keys
 #trustpath=/home/garyc/webapps/ldapeditor/WEB-INF/pioneer.keys
+trustpath=/var/lib/tomcat9/webapps/ldapeditor/WEB-INF/pioneer.keys
