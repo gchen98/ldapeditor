@@ -4,15 +4,20 @@ use std::string::String;
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
+// use futures::future::ok;
 use ldap3::SearchEntry;
 // use rocket::time::Date;
 // use rocket::yansi::Paint;
-
+use serde_with::skip_serializing_none;
 // use serde_json::Value::String;
 // use crate::datasource::contact;
 
-#[allow(dead_code)]
+//#[allow(dead_code)]
 
+#[allow(dead_code)]
+pub enum ContactError{
+    Message(String)
+}
 pub enum PersonField{
     FullName,
     FirstName,
@@ -37,10 +42,12 @@ pub enum PersonField{
     AddressPostalCodeHome,
     Notes,
     UserDefined,
+
 }
 
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "profileMetadata")]
 pub struct ProfileMetadata {
@@ -50,16 +57,11 @@ pub struct ProfileMetadata {
     pub user_types:Option<Vec<String>>
 }
 impl ProfileMetadata {
-    #[allow(dead_code)]
-    pub fn new(object_type: Option<String>, user_types: Option<Vec<String>>) -> ProfileMetadata {
-        ProfileMetadata{
-            object_type: object_type,
-            user_types: user_types
-        }
-    }
+
 }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "source")]
 pub struct Source {
@@ -73,37 +75,46 @@ pub struct Source {
     pub update_time: Option<DateTime<Utc>>
 }
 impl Source {
-    #[allow(dead_code)]
-    pub fn new(id: Option<String>, etag: Option<String>, profile_metadata: Option<ProfileMetadata>,
-    source_type:Option<String>,update_time:Option<DateTime<Utc>>) -> Source {
+    //#[allow(dead_code)]
+    pub fn new() -> Source {
         Source{
-            id,
-            etag,
-            profile_metadata,
-            source_type,
-            update_time
+            id:None,
+            etag:None,
+            profile_metadata:None,
+            source_type:Some("CONTACT".into()),
+            update_time:None
         }
     }
 }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "metadata")]
 pub struct Metadata {
     pub primary: Option<bool>,
     pub source: Option<Source>
+    //#[serde(rename = "sourcePrimary")]
 }
 impl Metadata {
     #[allow(dead_code)]
-    pub fn new(primary: Option<bool>, source: Option<Source>) -> Metadata {
+    pub fn new() -> Metadata {
         Metadata{
-            primary:primary,
-            source: source
+            primary:None,
+            source:Some(Source{
+                id:None,
+                source_type:Some(String::from("CONTACT")),
+                etag:None,
+                profile_metadata:None,
+                update_time:None
+            })
+
         }
     }
 }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "metadata")]
 pub struct PersonMetadata {
@@ -112,7 +123,7 @@ pub struct PersonMetadata {
     pub sources:Option<Vec<Source>>
 }
 impl PersonMetadata {
-    #[allow(dead_code)]
+    //#[allow(dead_code)]
     pub fn new(object_type: Option<String>, sources: Option<Vec<Source>>) -> PersonMetadata {
         PersonMetadata{
             object_type: object_type,
@@ -122,6 +133,7 @@ impl PersonMetadata {
 }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "address")]
 pub struct Address{
@@ -139,26 +151,27 @@ pub struct Address{
     #[serde(rename = "type")]
     pub address_type: Option<String>
 }
-impl Address{
-    #[allow(dead_code)]
-    pub fn new(city: Option<String>, formatted_type: Option<String> ,
-               formatted_value: Option<String>, metadata: Option<Metadata>,
-               postal_code: Option<String>, region: Option<String>,
-               street_address: Option<String>, address_type:Option<String>) -> Address {
-        Address {
-            city: city,
-            formatted_type: formatted_type,
-            formatted_value: formatted_value,
-            metadata: metadata,
-            postal_code: postal_code,
-            region: region,
-            street_address: street_address,
-            address_type: address_type
-        }
-    }
-}
+// impl Address{
+//     //#[allow(dead_code)]
+//     pub fn new(city: Option<String>, formatted_type: Option<String> ,
+//                formatted_value: Option<String>, metadata: Option<Metadata>,
+//                postal_code: Option<String>, region: Option<String>,
+//                street_address: Option<String>, address_type:Option<String>) -> Address {
+//         Address {
+//             city: city,
+//             formatted_type: formatted_type,
+//             formatted_value: formatted_value,
+//             metadata: metadata,
+//             postal_code: postal_code,
+//             region: region,
+//             street_address: street_address,
+//             address_type: address_type
+//         }
+//     }
+// }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "biography")]
 pub struct Biography{
@@ -167,19 +180,20 @@ pub struct Biography{
     pub metadata: Option<Metadata>,
     pub value: Option<String>
 }
-impl Biography{
-    #[allow(dead_code)]
-    pub fn new(content_type: Option<String>, metadata: Option<Metadata>,
-               value: Option<String>) -> Biography{
-        Biography{
-            content_type:content_type,
-            metadata:metadata,
-            value: value
-        }
-    }
-}
+// impl Biography{
+//     //#[allow(dead_code)]
+//     pub fn new(content_type: Option<String>, metadata: Option<Metadata>,
+//                value: Option<String>) -> Biography{
+//         Biography{
+//             content_type:content_type,
+//             metadata:metadata,
+//             value: value
+//         }
+//     }
+// }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "emailAddress")]
 pub struct EmailAddress{
@@ -191,7 +205,7 @@ pub struct EmailAddress{
     pub value: Option<String>
 }
 impl EmailAddress{
-    #[allow(dead_code)]
+    //#[allow(dead_code)]
     pub fn new(formatted_type: Option<String>,metadata: Option<Metadata>,
                email_address_type: Option<String>, value: Option<String>) -> EmailAddress{
         EmailAddress{
@@ -204,6 +218,7 @@ impl EmailAddress{
 }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "name")]
 pub struct Name{
@@ -216,29 +231,25 @@ pub struct Name{
     #[serde(rename = "givenName")]
     pub given_name: Option<String>,
     pub metadata: Option<Metadata>,
-    #[serde(rename = "sourcePrimary")]
-    pub source_primary: Option<bool>,
     #[serde(rename = "unstructuredName")]
     pub unstructured_name:Option<String>
 }
 impl Name{
-    #[allow(dead_code)]
-    pub fn new(display_name: Option<String>,display_name_last_first: Option<String>,
-               family_name: Option<String>, given_name:Option<String>, metadata: Option<Metadata>,
-               source_primary: Option<bool>, unstructured_name:Option<String>)->Name {
+    //#[allow(dead_code)]
+    pub fn new()->Name {
         Name{
-            display_name:display_name,
-            display_name_last_first:display_name_last_first,
-            family_name:family_name,
-            given_name:given_name,
-            metadata:metadata,
-            source_primary:source_primary,
-            unstructured_name:unstructured_name
+            display_name:None,
+            display_name_last_first:None,
+            family_name:None,
+            given_name:None,
+            metadata:None,
+            unstructured_name:None
         }
     }
 }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "organization")]
 pub struct Organization {
@@ -250,21 +261,22 @@ pub struct Organization {
     #[serde(rename = "type")]
     pub organization_type: Option<String>
 }
-impl Organization {
-    #[allow(dead_code)]
-    pub fn new(formatted_type: Option<String>, metadata: Option<Metadata>,
-    name: Option<String>, title: Option<String>, organization_type:Option<String>)->Organization {
-        Organization{
-            formatted_type:formatted_type,
-            metadata:metadata,
-            name:name,
-            title:title,
-            organization_type:organization_type
-        }
-    }
-}
+// impl Organization {
+//     //#[allow(dead_code)]
+//     pub fn new(formatted_type: Option<String>, metadata: Option<Metadata>,
+//     name: Option<String>, title: Option<String>, organization_type:Option<String>)->Organization {
+//         Organization{
+//             formatted_type:formatted_type,
+//             metadata:metadata,
+//             name:name,
+//             title:title,
+//             organization_type:organization_type
+//         }
+//     }
+// }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "phoneNumber")]
 pub struct PhoneNumber {
@@ -276,7 +288,7 @@ pub struct PhoneNumber {
     pub value: Option<String>
 }
 impl PhoneNumber{
-    #[allow(dead_code)]
+    //#[allow(dead_code)]
     pub fn new(formatted_type: Option<String>, metadata: Option<Metadata>,
     phone_number_type: Option<String>, value:Option<String>)->PhoneNumber{
         PhoneNumber{
@@ -289,25 +301,27 @@ impl PhoneNumber{
 }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "userDefined")]
 pub struct UserDefined {
-    pub key: String,
-    pub metadata: Metadata,
-    pub value: String
+    pub key: Option<String>,
+    pub metadata: Option<Metadata>,
+    pub value: Option<String>
 }
 impl UserDefined{
-    #[allow(dead_code)]
-    pub fn new(key:String,metadata:Metadata,value:String)->UserDefined{
-        UserDefined{
-            key:key,
-            metadata:metadata,
-            value:value
-        }
-    }
+     //#[allow(dead_code)]
+     pub fn new(key:Option<String>,metadata:Option<Metadata>,value:Option<String>)->UserDefined{
+         UserDefined{
+             key:key,
+             metadata:metadata,
+             value:value
+         }
+     }
 }
 #[derive(Debug)]
 #[derive(Clone)]
+#[skip_serializing_none]
 #[derive(Serialize,Deserialize)]
 #[serde(rename = "person")]
 pub struct GooglePerson {
@@ -326,39 +340,14 @@ pub struct GooglePerson {
     #[serde(rename = "userDefined")]
     pub user_defined:Option<Vec<UserDefined>>
 }
-impl GooglePerson{
-    #[allow(dead_code)]
-    pub fn new(addresses: Option<Vec<Address>>, biographies: Option<Vec<Biography>>,
-               email_addresses: Option<Vec<EmailAddress>>, etag:Option<String>,
-               metadata:Option<PersonMetadata>, names:Option<Vec<Name>>,
-               organizations:Option<Vec<Organization>>,phone_numbers:Option<Vec<PhoneNumber>>,
-               resource_name:Option<String>,user_defined:Option<Vec<UserDefined>>)->GooglePerson{
-        GooglePerson {
-            addresses: addresses,
-            biographies: biographies,
-            email_addresses: email_addresses,
-            etag: etag,
-            metadata: metadata,
-            names: names,
-            organizations: organizations,
-            phone_numbers:phone_numbers,
-            resource_name: resource_name,
-            user_defined: user_defined
-        }
-    }
-}
+
+#[derive(Debug)]
+#[derive(Clone)]
 pub struct LdapPerson{
     pub search_entry: Option<SearchEntry>
 }
 
-impl LdapPerson{
-    #[allow(dead_code)]
-    pub fn new(search_entry:Option<SearchEntry>)->LdapPerson{
-        LdapPerson{
-            search_entry:search_entry
-        }
-    }
-}
+
 pub trait Person{
     fn get_field(&self,person_field:PersonField)->Result<Option<String>,Box<dyn std::error::Error>>;
     fn get_modify_timestamp(&self)->Result<Option<chrono::DateTime<Utc>>,Box<dyn std::error::Error>>;
@@ -370,9 +359,12 @@ impl Person for LdapPerson {
 
     fn get_field(&self,person_field:PersonField)->Result<Option<String>,Box<dyn std::error::Error>>{
         let getter = |attribute_name:&str,index:usize|->Result<Option<String>,Box<dyn std::error::Error>>{
-            return Ok(Some(self.search_entry.as_ref().ok_or("no search entry")?.
-                attrs.get(attribute_name).ok_or("no SN")?.get(index).ok_or("no first index")?.
-                to_string()));
+            if let Some(search_entry) = self.search_entry.as_ref()  &&
+                let Some(attribute_vec) = search_entry.attrs.get(attribute_name)&&
+                let Some(attr_val) = attribute_vec.get(index){
+                    return Ok(Some(attr_val.into()));
+            }
+            Ok(None)
         };
         let res = match person_field {
             PersonField::FullName=>getter("cn",0),
@@ -411,7 +403,7 @@ impl Person for LdapPerson {
         let fmt = "%Y%m%d%H%M%S%.f%z";
         let parse_result  = chrono::DateTime::parse_from_str(&edited,fmt);
         if let Ok(date_time) = parse_result{
-            println!("parse ok {:?}",date_time);
+            // println!("parse ok {:?}",date_time);
             //let datetime2 = DateTime::<Utc>::from_naive_utc_and_offset(date_time,L)
             return Ok(Some(date_time.into()));
             // return None;
@@ -423,18 +415,16 @@ impl Person for LdapPerson {
     fn set_field(&mut self,person_field:PersonField,value:&str)->Result<(),Box<dyn std::error::Error>>{
         let mut setter = |attribute_name:&str|->Result<(),Box<dyn std::error::Error>>{
             if self.search_entry.is_none(){
-                if attribute_name=="cn" {
-                    let mut dn = String::from("cn=");
-                    dn.push_str(value);
-                    dn.push_str(",ou=Public,dc=pioneerind,dc=com");
-                    self.search_entry = Some(SearchEntry {
-                        dn: dn,
-                        attrs: HashMap::new(),
-                        bin_attrs: HashMap::new()
-                    });
-                }else{
-                    return Err(Box::new(std::io::Error::new(std::io::ErrorKind::Other,"Must add a CN first")))
-                }
+                let mut dn = String::from("cn=");
+                dn.push_str(value);
+                dn.push_str(",ou=Public,dc=pioneerind,dc=com");
+                self.search_entry = Some(SearchEntry {
+                    dn: dn,
+                    attrs: HashMap::new(),
+                    bin_attrs: HashMap::new()
+                });
+            }else{
+                return Err(Box::new(std::io::Error::new(std::io::ErrorKind::Other,"Must add a CN first")))
             }
             if let Some(attr_vec) =self.search_entry.as_ref().
                 ok_or("no search entry")?.attrs.get(attribute_name){
@@ -497,62 +487,121 @@ impl Person for LdapPerson {
 
 impl Person for GooglePerson {
     fn get_field(&self,person_field:PersonField)->Result<Option<String>,Box<dyn std::error::Error>> {
+        let get_street_address = |selected_address_type:&str|->Result<Option<String>,Box<dyn std::error::Error>>{
+            if let Some(addresses) = self.addresses.as_ref(){
+                for address in addresses{
+                    if let Some(address_type) = address.address_type.as_ref() && address_type==selected_address_type{
+                        return Ok(address.street_address.clone());
+                    }
+                }
+            }
+            Ok(None)
+        };
+        let get_city = |selected_address_type:&str|->Result<Option<String>,Box<dyn std::error::Error>>{
+            if let Some(addresses) = self.addresses.as_ref() {
+                for address in addresses{
+                    if let Some(address_type) = address.address_type.as_ref()  &&  address_type==selected_address_type {
+                        return Ok(address.city.clone());
+                    }
+                }
+            }
+            Ok(None)
+        };
+        let get_region = |selected_address_type:&str|->Result<Option<String>,Box<dyn std::error::Error>>{
+            if let Some(addresses) = self.addresses.as_ref(){
+                for address in addresses{
+                    if let Some(address_type) = address.address_type.as_ref()  &&  address_type==selected_address_type {
+                        return Ok(address.region.clone());
+                    }
+                }
+            }
+            Ok(None)
+        };
+        let get_postal_code = |selected_address_type:&str|->Result<Option<String>,Box<dyn std::error::Error>>{
+            if let Some(addresses) = self.addresses.as_ref(){
+                for address in addresses{
+                    if let Some(address_type) = address.address_type.as_ref()  &&  address_type==selected_address_type {
+                        return Ok(address.postal_code.clone());
+                    }
+                }
+            }
+            Ok(None)
+        };
         let get_email  = |email_type:&str|->Result<Option<String>,Box<dyn std::error::Error>>{
-            let email_addresses = self.email_addresses.as_ref().ok_or("no names vec")?;
-            for email_address in email_addresses {
-                let email_address_type = email_address.email_address_type.as_ref().ok_or("no email address type")?;
-                if email_address_type==email_type{
-                    return Ok(email_address.value.clone());
+            if let Some(email_addresses) = self.email_addresses.as_ref() {
+                for email_address in email_addresses {
+                    if let Some(email_address_type) = email_address.email_address_type.as_ref()&&  email_address_type==email_type{
+                        return Ok(email_address.value.clone());
+                    }
                 }
             }
             Ok(None)
         };
         let get_phone_number = |selected_phone_number_type:&str,selected_index:usize|->Result<Option<String>,Box<dyn std::error::Error>>{
-            let phone_numbers = self.phone_numbers.as_ref().ok_or("no names vec")?;
-            let mut index = 0;
-            for phone_number in phone_numbers {
-                let phone_number_type = phone_number.phone_number_type.as_ref().ok_or("no phone number type")?;
-                if phone_number_type==selected_phone_number_type {
-                    if selected_index==index {
+            if let Some(phone_numbers) = self.phone_numbers.as_ref() {
+                let mut index = 0;
+                for phone_number in phone_numbers {
+                    if let Some(phone_number_type) = phone_number.phone_number_type.as_ref() &&
+                        phone_number_type == selected_phone_number_type &&
+                        selected_index == index {
                         return Ok(phone_number.value.clone());
                     }
-                    index+=1;
+                    index += 1;
+                }
+            }
+            Ok(None)
+        };
+        let get_name = ||->Result<Option<Name>,Box<dyn std::error::Error>>{
+            if let Some(names) =self.names.as_ref() && let Some(first) = names.first(){
+                return Ok(Some(first.clone()));
+            }
+            Ok(None)
+        };
+        let get_org = ||->Result<Option<Organization>,Box<dyn std::error::Error>>{
+            if let Some(organizations) = self.organizations.as_ref(){
+                for organization in organizations {
+                    if let Some(org_type) = organization.organization_type.as_ref() &&
+                        org_type=="work"{
+                            return Ok(Some(organization.clone()));
+                    }
                 }
             }
             Ok(None)
         };
         match person_field {
             PersonField::FullName=>{
-                return Ok(Some(self.names.as_ref().ok_or("no names vec")?.
-                    first().ok_or("no first element")?.display_name.as_ref().
-                    ok_or("no display name")?.to_string()));
+                if let Ok(res) = get_name() && let Some(name) = res{
+                    return Ok(name.display_name.clone());
+                }
             },
             PersonField::FirstName=>{
-                return Ok(Some(self.names.as_ref().ok_or("no names vec")?.
-                    first().ok_or("no first element")?.given_name.as_ref().
-                    ok_or("no display name")?.to_string()));
+                if let Ok(res) = get_name() && let Some(name) = res{
+                    return Ok(name.given_name.clone());
+                }
             },
             PersonField::LastName=>{
-                return Ok(Some(self.names.as_ref().ok_or("no names vec")?.
-                    first().ok_or("no first element")?.family_name.as_ref().
-                    ok_or("no display name")?.to_string()));
+                if let Ok(res) = get_name() && let Some(name) = res{
+                    return Ok(name.family_name.clone());
+                }
             },
             PersonField::Company=>{
-                let organizations = self.organizations.as_ref().ok_or("no names vec")?;
-                for organization in organizations {
-                    let org_type = organization.organization_type.as_ref().ok_or("no organization type")?;
-                    if org_type=="work"{
-                        return Ok(organization.name.clone());
-                    }
+                if let Ok(res) = get_org() && let Some(organization) = res{
+                    return Ok(organization.name.clone());
                 }
             }
             PersonField::Title=>{
-                let organizations = self.organizations.as_ref().ok_or("no names vec")?;
-                for organization in organizations {
-                    let org_type = organization.organization_type.as_ref().ok_or("no organization type")?;
-                    if org_type=="work"{
-                        return Ok(organization.title.clone());
-                    }
+                if let Ok(res) = get_org() && let Some(organization) = res{
+                    return Ok(organization.title.clone());
+                }
+            }
+            PersonField::Notes=>{
+                if let Some(biographies) = self.biographies.as_ref() && let Some(biography) = biographies.first(){
+                    return Ok(biography.value.clone());
+                }
+            }
+            PersonField::UserDefined=>{
+                if let Some(vec_user_defined) = self.user_defined.as_ref() &&  let Some(user_defined) = vec_user_defined.first(){
+                    return Ok(user_defined.value.clone());
                 }
             }
             PersonField::EmailWork=>return get_email("work"),
@@ -563,10 +612,16 @@ impl Person for GooglePerson {
             PersonField::PhoneHome2=>return get_phone_number("home",1),
             PersonField::PhoneMobile1=>return get_phone_number("mobile",0),
             PersonField::PhoneMobile2=>return get_phone_number("mobile",1),
-            _ => ()
+            PersonField::AddressStreetWork=>return get_street_address("work"),
+            PersonField::AddressStreetHome=>return get_street_address("home"),
+            PersonField::AddressCityWork=>return get_city("work"),
+            PersonField::AddressCityHome=>return get_city("home"),
+            PersonField::AddressRegionWork=>return get_region("work"),
+            PersonField::AddressRegionHome=>return get_region("home"),
+            PersonField::AddressPostalCodeWork=>return get_postal_code("work"),
+            PersonField::AddressPostalCodeHome=>return get_postal_code("home"),
         }
         Ok(None)
-
     }
     fn get_modify_timestamp(&self) -> Result<Option<DateTime<Utc>>,Box<dyn std::error::Error>> {
         let source = self.metadata.as_ref().ok_or("no metadata")?.sources.as_ref().
@@ -578,16 +633,69 @@ impl Person for GooglePerson {
         Ok(None)
     }
     fn set_field(&mut self, person_field: PersonField, value: &str) ->Result<(),Box<dyn std::error::Error>> {
+        let mut set_email = |email_type: &str |->Result<(),Box<dyn std::error::Error>>{
+            if self.email_addresses.is_none(){
+                let mut vec:Vec<EmailAddress> = Vec::new();
+                vec.push(EmailAddress::new(None,None,None,None));
+                self.email_addresses = Some(vec);
+            }
+            let orig_vec = self.email_addresses.as_mut().unwrap();
+            orig_vec[0].email_address_type = Some(String::from(email_type));
+            orig_vec[0].value = Some(String::from(value));
+            Ok(())
+        };
+        let mut set_phone = |selected_type:&str|->Result<(),Box<dyn std::error::Error>> {
+            let phone_number = PhoneNumber::new(None,None,Some(selected_type.into()),Some(value.into()));
+            if self.phone_numbers.is_none() {
+                self.phone_numbers = Some(Vec::new());
+                // let mut vec: Vec<PhoneNumber> = Vec::new();
+            }
+            self.phone_numbers.as_mut().unwrap().push(phone_number);
+            Ok(())
+        };
+        let mut set_sync = ||->Result<(),Box<dyn std::error::Error>> {
+            let user_defined = UserDefined::new(Some("ldap".into()),None,Some("sync".into()));
+            if self.user_defined.is_none() {
+                self.user_defined = Some(Vec::new());
+            }
+            self.user_defined.as_mut().unwrap().push(user_defined);
+            Ok(())
+        };
         match person_field{
             PersonField::FullName=>{
                 if self.names.is_none(){
                     let mut name_vec = Vec::new();
-                    name_vec.push(Name::new(None,None,None,None,None,None,None));
+                    name_vec.push(Name::new());
                     self.names = Some(name_vec);
                 }
                 let orig_vec = self.names.as_mut().unwrap();
                 orig_vec[0].display_name = Some(String::from(value));
-            }
+                return Ok(())
+            },
+            PersonField::FirstName=>{
+                if self.names.is_none(){
+                    let mut name_vec = Vec::new();
+                    name_vec.push(Name::new());
+                    self.names = Some(name_vec);
+                }
+                let orig_vec = self.names.as_mut().unwrap();
+                orig_vec[0].given_name = Some(String::from(value));
+                return Ok(())
+            },
+            PersonField::LastName=>{
+                if self.names.is_none(){
+                    let mut name_vec = Vec::new();
+                    name_vec.push(Name::new());
+                    self.names = Some(name_vec);
+                }
+                let orig_vec = self.names.as_mut().unwrap();
+                orig_vec[0].family_name = Some(String::from(value));
+                return Ok(())
+            },
+            PersonField::EmailWork=>set_email("work")?,
+            PersonField::EmailHome=>set_email("home")?,
+            PersonField::PhoneMobile1=>set_phone("mobile")?,
+            PersonField::UserDefined=>set_sync()?,
             _=>()
         }
         Ok(())
@@ -600,7 +708,9 @@ impl Person for GooglePerson {
             // let formatted = format!("{}", newval.format(fmt));
             // println!("{}", formatted);
 
-            let source = Source::new(None,None,None,Some("CONTACT".into()),Some(newval));
+            let mut source = Source::new();
+            source.source_type = Some(String::from("CONTACT"));
+            source.update_time = Some(newval);
             let sources_vec:Vec<Source> = vec![source];
             self.metadata = Some(PersonMetadata::new(Some("PERSON".into()),Some(sources_vec)));
         }
@@ -614,419 +724,309 @@ impl Person for GooglePerson {
     }
 
 
-    // fn get_email_work(&self) -> Option<String> {
-    //     if let Some(emails) = &self.email_addresses{
-    //         for email_address in emails {
-    //             if let Some(email_address_type)=&email_address.email_address_type{
-    //                 if email_address_type=="work"{
-    //                     if let Some(email_value) = &email_address.value{
-    //                         return Some(email_value.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_email_home(&self) -> Option<String> {
-    //     if let Some(emails) = &self.email_addresses{
-    //         for email_address in emails {
-    //             if let Some(email_address_type)=&email_address.email_address_type{
-    //                 if let Some(email_value) = &email_address.value{
-    //                     return Some(email_value.to_string());
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_company(&self) -> Option<String> {
-    //     if let Some(organizations) = &self.organizations{
-    //         for organization in organizations {
-    //             if let Some(organization_type)=&organization.organization_type{
-    //                 if organization_type=="work"{
-    //                     if let Some(org_name) = &organization.name{
-    //                         return Some(org_name.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_job_title(&self) -> Option<String> {
-    //     if let Some(organizations) = &self.organizations{
-    //         for organization in organizations {
-    //             if let Some(organization_type)=&organization.organization_type{
-    //                 if organization_type=="work"{
-    //                     if let Some(org_title) = &organization.title{
-    //                         return Some(org_title.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_phone_number_work1(&self) -> Option<String> {
-    //     return phone_number_helper(&self,"work",0);
-    //
-    // }
-    //
-    // fn get_phone_number_work2(&self) -> Option<String> {
-    //     return phone_number_helper(&self,"work",1);
-    // }
-    //
-    // fn get_phone_number_home1(&self) -> Option<String> {
-    //     return phone_number_helper(&self,"home",0);
-    // }
-    //
-    // fn get_phone_number_home2(&self) -> Option<String> {
-    //     return phone_number_helper(&self,"home",1);
-    // }
-    //
-    // fn get_phone_number_mobile1(&self) -> Option<String> {
-    //     return phone_number_helper(&self,"mobile",0);
-    // }
-    //
-    // fn get_phone_number_mobile2(&self) -> Option<String> {
-    //     return phone_number_helper(&self,"mobile",1);
-    // }
-    //
-    // fn get_street_work(&self) -> Option<String> {
-    //     if let Some(addresses) = &self.addresses{
-    //         for address in addresses {
-    //             if let Some(address_type)=&address.address_type{
-    //                 if address_type=="work"{
-    //                     if let Some(street_address) = &address.street_address {
-    //                         return Some(street_address.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_street_home(&self) -> Option<String> {
-    //     if let Some(addresses) = &self.addresses{
-    //         for address in addresses {
-    //             if let Some(address_type)=&address.address_type{
-    //                 if address_type=="home"{
-    //                     if let Some(street_address) = &address.street_address {
-    //                         return Some(street_address.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_city_work(&self) -> Option<String> {
-    //     if let Some(addresses) = &self.addresses{
-    //         for address in addresses {
-    //             if let Some(address_type)=&address.address_type{
-    //                 if address_type=="work"{
-    //                     if let Some(city) = &address.city {
-    //                         return Some(city.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_city_home(&self) -> Option<String> {
-    //     if let Some(addresses) = &self.addresses{
-    //         for address in addresses {
-    //             if let Some(address_type)=&address.address_type{
-    //                 if address_type=="home"{
-    //                     if let Some(city) = &address.city {
-    //                         return Some(city.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_state_work(&self) -> Option<String> {
-    //     if let Some(addresses) = &self.addresses{
-    //         for address in addresses {
-    //             if let Some(address_type)=&address.address_type{
-    //                 if address_type=="work"{
-    //                     if let Some(region) = &address.region {
-    //                         return Some(region.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_state_home(&self) -> Option<String> {
-    //     if let Some(addresses) = &self.addresses{
-    //         for address in addresses {
-    //             if let Some(address_type)=&address.address_type{
-    //                 if address_type=="home"{
-    //                     if let Some(region) = &address.region {
-    //                         return Some(region.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_zip_work(&self) -> Option<String> {
-    //     if let Some(addresses) = &self.addresses{
-    //         for address in addresses {
-    //             if let Some(address_type)=&address.address_type{
-    //                 if address_type=="work"{
-    //                     if let Some(postal_code) = &address.postal_code {
-    //                         return Some(postal_code.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_zip_home(&self) -> Option<String> {
-    //     if let Some(addresses) = &self.addresses{
-    //         for address in addresses {
-    //             if let Some(address_type)=&address.address_type{
-    //                 if address_type=="home"{
-    //                     if let Some(postal_code) = &address.postal_code {
-    //                         return Some(postal_code.to_string());
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_notes(&self) -> Option<String> {
-    //     if let Some(biographies) = &self.biographies{
-    //         for biography in biographies {
-    //             if let Some(notes)=&biography.value{
-    //                 return Some(notes.to_string());
-    //             }
-    //         }
-    //     }
-    //     None
-    // }
-    //
-    // fn get_contact_group(&self) -> Option<String> {
-    //     None
-    // }
-    //
-    //
-    //
-    // fn set_full_name(&mut self, newval: &str) {
-    //     if self.names.is_none(){
-    //         let mut name_vec = Vec::new();
-    //         name_vec.push(Name{
-    //             display_name:None,
-    //             family_name:None,
-    //             display_name_last_first:None,
-    //             given_name:None,
-    //             metadata:None,
-    //             source_primary:None,
-    //             unstructured_name:None
-    //         });
-    //         self.names = Some(name_vec);
-    //     }
-    //     let mut orig_vec = self.names.as_ref().unwrap().clone();
-    //     orig_vec[0].display_name = Some(String::from(newval));
-    //     self.names = Some(orig_vec);
-    //
-    //     // self.names.unwrap()[0].display_name = Some(String::from(newval));
-    // }
-    //
-    // fn set_first_name(mut self, newval: &str) {
-    //     if self.names.is_none(){
-    //         let mut name_vec = Vec::new();
-    //         name_vec.push(Name{
-    //             display_name:None,
-    //             family_name:None,
-    //             display_name_last_first:None,
-    //             given_name:None,
-    //             metadata:None,
-    //             source_primary:None,
-    //             unstructured_name:None
-    //         });
-    //         self.names = Some(name_vec);
-    //     }
-    //     self.names.unwrap()[0].given_name = Some(String::from(newval));
-    // }
-    //
-    // fn set_last_name(mut self, newval: &str) {
-    //     if self.names.is_none(){
-    //         let mut name_vec = Vec::new();
-    //         name_vec.push(Name{
-    //             display_name:None,
-    //             family_name:None,
-    //             display_name_last_first:None,
-    //             given_name:None,
-    //             metadata:None,
-    //             source_primary:None,
-    //             unstructured_name:None
-    //         });
-    //         self.names = Some(name_vec);
-    //     }
-    //     self.names.unwrap()[0].family_name = Some(String::from(newval));
-    // }
-    //
-    // fn set_email_work(mut self, newval: &str) {
-    //     let mut new_email:contact::EmailAddress = EmailAddress{
-    //         formatted_type:None,
-    //         metadata:None,
-    //         email_address_type:Some(String::from("work")),
-    //         value:Some(String::from(newval))
-    //     };
-    //     if self.email_addresses.is_none(){
-    //         let mut vec:Vec<contact::EmailAddress> = Vec::new();
-    //         vec.push(new_email);
-    //         self.email_addresses = Some(vec);
-    //     }else{
-    //         self.email_addresses.unwrap().push(new_email);
-    //     }
-    // }
-    //
-    // fn set_email_home(mut self, newval: &str) {
-    //     let mut new_email:contact::EmailAddress = EmailAddress{
-    //         formatted_type:None,
-    //         metadata:None,
-    //         email_address_type:Some(String::from("home")),
-    //         value:Some(String::from(newval))
-    //     };
-    //     if self.email_addresses.is_none(){
-    //         let mut vec:Vec<contact::EmailAddress> = Vec::new();
-    //         vec.push(new_email);
-    //         self.email_addresses = Some(vec);
-    //     }else{
-    //         self.email_addresses.unwrap().push(new_email);
-    //     }
-    // }
-    //
-    // fn set_company(mut self, newval: &str) {
-    //     if self.organizations.is_none(){
-    //         let mut org_vec = Vec::new();
-    //         org_vec.push(Organization{
-    //             formatted_type:None,
-    //             metadata:None,
-    //             name:None,
-    //             title:None,
-    //             organization_type:Some(String::from("work"))
-    //         });
-    //         self.organizations = Some(org_vec);
-    //     }
-    //     self.organizations.unwrap()[0].name = Some(String::from(newval));
-    // }
-    //
-    // fn set_job_title(mut self, newval: &str) {
-    //     if self.organizations.is_none(){
-    //         let mut org_vec = Vec::new();
-    //         org_vec.push(Organization{
-    //             formatted_type:None,
-    //             metadata:None,
-    //             name:None,
-    //             title:None,
-    //             organization_type:Some(String::from("work"))
-    //         });
-    //         self.organizations = Some(org_vec);
-    //     }
-    //     self.organizations.unwrap()[0].title = Some(String::from(newval));
-    // }
-    //
-    // fn set_phone_number_work1(mut self, newval: &str) {
-    //     let mut new_phone:contact::PhoneNumber = PhoneNumber{
-    //         formatted_type:None,
-    //         metadata:None,
-    //         phone_number_type:Some("work".into()),
-    //         value:Some(String::from(newval)),
-    //     };
-    //     if self.phone_numbers.is_none(){
-    //         let mut vec:Vec<contact::PhoneNumber> = Vec::new();
-    //         vec.push(new_phone);
-    //         self.phone_numbers = Some(vec);
-    //     }else{
-    //         self.phone_numbers.unwrap().push(new_phone);
-    //     }
-    // }
-    //
-    // fn set_phone_number_work2(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_phone_number_home1(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_phone_number_home2(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_phone_number_mobile1(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_phone_number_mobile2(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_street_work(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_street_home(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_city_work(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_city_home(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_state_work(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_state_home(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_zip_work(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_zip_home(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_notes(mut self, newval: &str) {
-    //     todo!()
-    // }
-    //
-    // fn set_contact_group(mut self, newval: &str) {
-    //     todo!()
+}
+
+impl LdapPerson{
+    // fn make_dn(google_person:&GooglePerson)->Result<String,Box<dyn std::error::Error>>{
+    //     let dn = String::from("cn=")+&google_person.get_field(PersonField::FullName)?.
+    //         ok_or("cannot get full name")?+",ou=Public,dc=pioneerind,dc=com";
+    //     Ok(dn)
     // }
 
+    pub fn get_subscriptions(&self)->Option<Vec<String>>{
+        if let Some(search_entry)= self.search_entry.as_ref() &&
+            let Some(attr_vec) = search_entry.attrs.get("ou"){
+            return Some(attr_vec.clone());
+
+          }
+        None
+    }
+    pub fn set_subscriptions(&mut self, subscriptions: &Vec<String>)->(){
+        if let Some(search_entry)= self.search_entry.as_mut() {
+            search_entry.attrs.insert("ou".to_string(),subscriptions.clone());
+
+        }
+        ()
+    }
+
+    pub fn from_ldap(search_entry: SearchEntry)->Result<LdapPerson,Box<dyn std::error::Error>>{
+        let ldap_person = LdapPerson{
+            search_entry:Some(search_entry)
+        };
+        Ok(ldap_person)
+    }
+
+    //#[allow(dead_code)]
+    pub fn from_google(google_person: &GooglePerson)->Result<LdapPerson,Box<dyn std::error::Error>> {
+        let create_search_entry = ||->Result<SearchEntry,Box<dyn std::error::Error>> {
+            let make_dn = ||->Result<String,Box<dyn std::error::Error>> {
+                let dn = String::from("cn=")+&google_person.get_field(PersonField::FullName)?.
+                    ok_or("cannot get full name")?+",ou=Public,dc=pioneerind,dc=com";
+                Ok(dn)
+            };
+
+            let make_attrs =||->Result<HashMap<String,Vec<String>>,Box<dyn std::error::Error>>{
+                let mut attrs = HashMap::new();
+                
+                let mut make_double_attr = |attr_name:&str, person_field1: PersonField,person_field2_option:Option<PersonField>|->Result<(),Box<dyn std::error::Error>>{
+                    let mut attr_vec = Vec::new();
+                    if let Ok(res) = google_person.get_field(person_field1) &&
+                        let Some(field_value) = res {
+                        attr_vec.push(field_value);
+                    }
+                    if let Some(person_field2) = person_field2_option &&
+                        let Ok(res) = google_person.get_field(person_field2) &&                        
+                        let Some(field_value) = res {
+                        attr_vec.push(field_value);
+                    }
+                    if attr_vec.len() > 0 {
+                        attrs.insert(String::from(attr_name),attr_vec);
+                    }
+                    Ok(())
+                };
+                make_double_attr("cn",PersonField::FullName,None)?;
+                make_double_attr("givenName",PersonField::FirstName,None)?;
+                make_double_attr("sn",PersonField::LastName,None)?;
+                make_double_attr("mail",PersonField::EmailWork,None)?;
+                make_double_attr("o",PersonField::Company,None)?;
+                make_double_attr("title",PersonField::Title,None)?;
+                make_double_attr("description",PersonField::Notes,None)?;
+                make_double_attr("mozillaSecondEmail",PersonField::EmailHome,None)?;
+                make_double_attr("telephoneNumber",PersonField::PhoneWork1,Some(PersonField::PhoneWork2))?;
+                make_double_attr("homePhone",PersonField::PhoneHome1,Some(PersonField::PhoneHome2))?;
+                make_double_attr("mobile",PersonField::PhoneMobile1,Some(PersonField::PhoneMobile2))?;
+                make_double_attr("street",PersonField::AddressStreetWork,None)?;
+                make_double_attr("l",PersonField::AddressCityWork,None)?;
+                make_double_attr("st",PersonField::AddressRegionWork,None)?;
+                make_double_attr("postalCode",PersonField::AddressPostalCodeWork,None)?;
+                make_double_attr("mozillaHomeStreet",PersonField::AddressStreetHome,None)?;
+                make_double_attr("mozillaHomeLocalityName",PersonField::AddressCityHome,None)?;
+                make_double_attr("mozillaHomeState",PersonField::AddressRegionHome,None)?;
+                make_double_attr("mozillaHomePostalCode",PersonField::AddressPostalCodeHome,None)?;
+                Ok(attrs)
+            };
+            let make_bin_attrs = ||->Result<HashMap<String,Vec<Vec<u8>>>,Box<dyn std::error::Error>>{
+                let bin_attrs = HashMap::new();
+                Ok(bin_attrs)
+            };
+            Ok(
+                SearchEntry{
+                    dn:make_dn()?,
+                    attrs:make_attrs()?,
+                    bin_attrs:make_bin_attrs()?
+                }
+            )
+        };
+        let ldap_person = LdapPerson{
+            search_entry:Some(create_search_entry()?)
+        };
+        // let timestamp = google_person.get_modify_timestamp()?.ok_or("Can't get timestamp")?;
+        // ldap_person.set_modify_timestamp(timestamp)?;
+        // ldap_person.set_field(PersonField::UserDefined,contact_group)?;
+        Ok(ldap_person)
+    }
 
 }
 
+impl GooglePerson{
+    //#[allow(dead_code)]
+    pub fn is_synced(&self)->bool{
+        if let Ok(res) = self.get_field(PersonField::UserDefined) {
+            // println!("got user defined");
+            if let Some(sync_field) = res {
+                // println!("got sync field of value {:?}", sync_field);
+                if sync_field=="sync" {
+                    // println!("returning true");
+                    return true;
+                }
+            }
+
+        }
+        false
+    }
+
+
+
+    pub fn set_synced(&mut self)->() {
+        let _res = self.set_field(PersonField::UserDefined,"sync");
+
+        ()
+    }
+
+    pub fn new(orig_google_person:Option<&GooglePerson>,ldap_person: &LdapPerson)->Result<GooglePerson,Box<dyn std::error::Error>> {
+        let get_addresses = ||->Result<Vec<Address>,Box<dyn std::error::Error>> {
+            Ok(vec![
+                Address{
+                    city:ldap_person.get_field(PersonField::AddressCityWork)?,
+                    formatted_type:Some(String::from("Work")),
+                    formatted_value:None,
+                    metadata:Some(Metadata::new()),
+                    postal_code:ldap_person.get_field(PersonField::AddressPostalCodeWork)?,
+                    region:ldap_person.get_field(PersonField::AddressRegionWork)?,
+                    street_address:ldap_person.get_field(PersonField::AddressStreetWork)?,
+                    address_type:Some(String::from("work"))
+                },
+                Address{
+                    city:ldap_person.get_field(PersonField::AddressCityWork)?,
+                    formatted_type:Some(String::from("Home")),
+                    formatted_value:None,
+                    metadata:Some(Metadata::new()),
+                    postal_code:ldap_person.get_field(PersonField::AddressPostalCodeWork)?,
+                    region:ldap_person.get_field(PersonField::AddressRegionWork)?,
+                    street_address:ldap_person.get_field(PersonField::AddressStreetWork)?,
+                    address_type:Some(String::from("home"))
+                }
+            ])
+        };
+        let get_emails = ||->Result<Vec<EmailAddress>,Box<dyn std::error::Error>> {
+            Ok(vec![
+                EmailAddress{
+                    formatted_type:Some(String::from("Work")),
+                    value:ldap_person.get_field(PersonField::EmailWork)?,
+                    metadata:Some(Metadata::new()),
+                    email_address_type:Some(String::from("work"))
+                },
+                EmailAddress{
+                    formatted_type:Some(String::from("Home")),
+                    value:ldap_person.get_field(PersonField::EmailHome)?,
+                    metadata:Some(Metadata::new()),
+                    email_address_type:Some(String::from("home"))
+                }
+            ])
+        };
+        let get_names = ||->Result<Vec<Name>,Box<dyn std::error::Error>> {
+            Ok(vec![
+                Name
+                {
+                    display_name:ldap_person.get_field(PersonField::FullName)?,
+                    family_name:ldap_person.get_field(PersonField::LastName)?,
+                    given_name:ldap_person.get_field(PersonField::FirstName)?,
+                    display_name_last_first:None,
+                    unstructured_name:None,
+                    metadata:Some(Metadata::new())
+                }
+            ])
+        };
+        let get_phones = ||->Result<Vec<PhoneNumber>,Box<dyn std::error::Error>> {
+            Ok(vec![
+                PhoneNumber
+                {
+                    formatted_type:Some("Mobile".into()),
+                    metadata:Some(Metadata::new()),
+                    phone_number_type:Some("mobile".into()),
+                    value:ldap_person.get_field(PersonField::PhoneMobile1)?
+                },
+                PhoneNumber
+                {
+                    formatted_type:Some("Mobile".into()),
+                    metadata:Some(Metadata::new()),
+                    phone_number_type:Some("mobile".into()),
+                    value:ldap_person.get_field(PersonField::PhoneMobile2)?
+                },
+                PhoneNumber
+                {
+                    formatted_type:Some("Work".into()),
+                    metadata:Some(Metadata::new()),
+                    phone_number_type:Some("work".into()),
+                    value:ldap_person.get_field(PersonField::PhoneWork1)?
+                },
+                PhoneNumber
+                {
+                    formatted_type:Some("Work".into()),
+                    metadata:Some(Metadata::new()),
+                    phone_number_type:Some("work".into()),
+                    value:ldap_person.get_field(PersonField::PhoneWork2)?
+                },
+                PhoneNumber
+                {
+                    formatted_type:Some("Home".into()),
+                    metadata:Some(Metadata::new()),
+                    phone_number_type:Some("home".into()),
+                    value:ldap_person.get_field(PersonField::PhoneHome1)?
+                },
+                PhoneNumber
+                {
+                    formatted_type:Some("Home".into()),
+                    metadata:Some(Metadata::new()),
+                    phone_number_type:Some("home".into()),
+                    value:ldap_person.get_field(PersonField::PhoneHome2)?
+                },
+            ])
+        };
+        let get_organizations = ||->Result<Vec<Organization>,Box<dyn std::error::Error>> {
+            Ok(vec![
+                Organization
+                {
+                    formatted_type:None,
+                    organization_type:None,
+                    name:ldap_person.get_field(PersonField::Company)?,
+                    title:ldap_person.get_field(PersonField::Title)?,
+                    metadata:Some(Metadata::new())
+                }
+            ])
+        };
+        let get_biographies = ||->Result<Vec<Biography>,Box<dyn std::error::Error>> {
+            Ok(vec![
+                Biography{
+                    content_type:Some(String::from("TEXT_PLAIN")),
+                    value:ldap_person.get_field(PersonField::Notes)?,
+                    metadata:Some(Metadata::new())
+                }
+            ])
+        };
+        let get_user_defined = ||->Result<Vec<UserDefined>,Box<dyn std::error::Error>> {
+            Ok(vec![
+                UserDefined{
+                    key:Some("ldap".into()),
+                    metadata:Some(Metadata::new()),
+                    value:Some("sync".into())
+                }
+            ])
+        };
+        let mut resource_name:Option<String> = None;
+        let mut etag:Option<String> = None;
+        let mut person_metadata:Option<PersonMetadata> = Some(PersonMetadata{
+            object_type:Some(String::from("PERSON")),
+            sources:Some(vec![
+                Source::new()
+            ])
+        });
+        if let Some(google_person) = orig_google_person{
+            resource_name = google_person.resource_name.clone();
+            etag = google_person.etag.clone();
+            person_metadata = google_person.metadata.clone();
+        }
+        let google_person = GooglePerson{
+            addresses: Some(get_addresses()?),
+            biographies: Some(get_biographies()?),
+            email_addresses: Some(get_emails()?),
+            etag: etag,
+            metadata: person_metadata,
+            names: Some(get_names()?),
+            organizations: Some(get_organizations()?),
+            phone_numbers:Some(get_phones()?),
+            resource_name: resource_name,
+            user_defined: Some(get_user_defined()?)
+        };
+        Ok(google_person)
+    }
+
+    // pub fn new(addresses: Option<Vec<Address>>, biographies: Option<Vec<Biography>>,
+    //            email_addresses: Option<Vec<EmailAddress>>, etag:Option<String>,
+    //            metadata:Option<PersonMetadata>, names:Option<Vec<Name>>,
+    //            organizations:Option<Vec<Organization>>,phone_numbers:Option<Vec<PhoneNumber>>,
+    //            resource_name:Option<String>,user_defined:Option<Vec<UserDefined>>)->GooglePerson{
+    //     GooglePerson {
+    //         addresses: addresses,
+    //         biographies: biographies,
+    //         email_addresses: email_addresses,
+    //         etag: etag,
+    //         metadata: metadata,
+    //         names: names,
+    //         organizations: organizations,
+    //         phone_numbers:phone_numbers,
+    //         resource_name: resource_name,
+    //         user_defined: user_defined
+    //     }
+    // }
+}
