@@ -4,5 +4,5 @@ users=[
     {username="elise@caseyandgary.com",subscription="elise",filter=['elise','chubses']},
     {username="julian@caseyandgary.com",subscription="elise",filter=['julian','chubses']},
     {username="frank.chen@pioneerind.com",subscription="frank",filter=['frank','family']},
-    {username="alice.chen@pioneerind.com",subscription="alice",filter=['alice','frank','family']},
+    {username="alice.chen@pioneerind.com",subscription="alice",filter=['alice','family']},
 ]

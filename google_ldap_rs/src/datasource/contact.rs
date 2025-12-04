@@ -366,8 +366,18 @@ impl Person for LdapPerson {
             }
             Ok(None)
         };
+        let getter_cn = ||->Result<Option<String>,Box<dyn std::error::Error>>{
+            if let Some(search_entry) = self.search_entry.as_ref()  &&
+                let Some(first_name_vec) = search_entry.attrs.get("givenName")&&
+                let Some(first_name) = first_name_vec.first() &&
+                let Some(last_name_vec) = search_entry.attrs.get("sn")&&
+                let Some(lastname) = last_name_vec.first(){
+                return Ok(Some(first_name.to_owned() + " "+ lastname));
+            }
+            Ok(None)
+        };
         let res = match person_field {
-            PersonField::FullName=>getter("cn",0),
+            PersonField::FullName=>getter_cn(),
             PersonField::FirstName=>getter("givenName",0),
             PersonField::LastName=>getter("sn",0),
             PersonField::Company=>getter("o",0),
@@ -570,8 +580,11 @@ impl Person for GooglePerson {
         };
         match person_field {
             PersonField::FullName=>{
-                if let Ok(res) = get_name() && let Some(name) = res{
-                    return Ok(name.display_name.clone());
+                if let Ok(res) = get_name() &&
+                    let Some(name) = res &&
+                    let Some(first_name) = name.given_name &&
+                    let Some(last_name) = name.family_name {
+                    return Ok(Some(first_name+" "+&last_name));
                 }
             },
             PersonField::FirstName=>{

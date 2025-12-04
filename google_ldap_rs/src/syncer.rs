@@ -19,6 +19,7 @@ use crate::datasource::ldap::send_ldap_updates;
 use crate::datasource::people_api::{send_google_contacts, Operation};
 // use crate::datasource::people_api::Operation::Update;
 use crate::datasource::sync_config::GoogleConfig;
+// use serde::Serialize;
 
 #[derive(Clone)]
 struct UpdatePerson{
@@ -224,7 +225,7 @@ async fn purge_duplicates(google_config:&GoogleConfig,data_snapshot: &DataSnapsh
             }
             if resources_for_delete.len() > 0 {
                 println!("Resources for delete: {:?}",resources_for_delete);
-                send_google_contacts(&user.username,None,Some(&resources_for_delete),Operation::Delete).await?;
+                send_google_contacts(Operation::Delete,&user.username,&resources_for_delete,500).await?;
             }
         }
     }
@@ -284,7 +285,7 @@ async fn do_ldap_additions(google_config:&GoogleConfig,data_snapshot: &DataSnaps
     println!("There are {} google updates and {} ldap additions.",google_updates.len(),ldap_additions.len());
     for (username,google_contacts) in google_updates.iter() {
         if google_contacts.len()>0{
-            let _res = send_google_contacts(username.as_str(),Some(google_contacts),None,Operation::Update).await;
+            let _res = send_google_contacts(Operation::Update,&username.as_str(),&google_contacts,200).await;
         }
 
     }
@@ -382,7 +383,7 @@ async fn purge_orphans(google_config:&GoogleConfig,data_snapshot: &DataSnapshot
         }
         if add_vec.len()>0{
             println!("Adding {} Google contacts",add_vec.len());
-            let _res = send_google_contacts(&user.username,Some(&add_vec),None,Operation::Add).await;
+            let _res = send_google_contacts(Operation::Add, &user.username, &add_vec, 200).await;
         }
         let mut del_vec:Vec<String> = Vec::new();
         for fullname in google_deletions.iter() {
@@ -394,7 +395,7 @@ async fn purge_orphans(google_config:&GoogleConfig,data_snapshot: &DataSnapshot
         }
         if del_vec.len()>0{
             println!("Deleting {} Google contacts",del_vec.len());
-            let _res = send_google_contacts(&user.username,None,Some(&del_vec),Operation::Delete).await;
+            let _res = send_google_contacts(Operation::Delete, &user.username, &del_vec ,500).await;
         }
     }
     Ok(())
@@ -404,6 +405,7 @@ async fn run_updates(google_config:&GoogleConfig,data_snapshot: &DataSnapshot) -
     let user_vec = &google_config.users;
     let filename="timestamp.txt";
     let current_time = load_timestamp(filename).unwrap();
+    println!("Checking for updates since {:?}",current_time);
 
     let get_most_recent = |update_person:&UpdatePerson|->
         Result<(Option<DateTime<Utc>>,Option<LdapPerson>,Option<(String,GooglePerson)>,Option<Vec<String>>),Box<dyn std::error::Error>> {
@@ -516,7 +518,7 @@ async fn run_updates(google_config:&GoogleConfig,data_snapshot: &DataSnapshot) -
     for (username,person_vec) in google_updates.iter(){
         if person_vec.len()>0{
             println!("Google update for user {} with contact: {:?}",username,person_vec);
-            let _ = send_google_contacts(username,Some(person_vec),None,Operation::Update).await;
+            let _ = send_google_contacts(Operation::Update, username, person_vec,200).await;
         }
     }
     let _ = save_timestamp(filename);
@@ -551,15 +553,15 @@ pub async fn sync_contacts()->Result<(),Box<dyn std::error::Error>> {
     let _ = refresh_data_snapshot(&google_config,&mut data_snapshot).await?;
     let _results = purge_duplicates(&google_config,&data_snapshot).await?;
 
+    let _ = refresh_data_snapshot(&google_config,&mut data_snapshot).await?;
+    let _results = run_updates(&google_config,&data_snapshot).await?;
+
     // work flow step of checking for sync status and updating sync to true and adding to LDAP
     let _ = refresh_data_snapshot(&google_config,&mut data_snapshot).await?;
     let _results = do_ldap_additions(&google_config,&data_snapshot).await?;
 
     let _ = refresh_data_snapshot(&google_config,&mut data_snapshot).await?;
     let _results = purge_orphans(&google_config,&data_snapshot).await?;
-
-    let _ = refresh_data_snapshot(&google_config,&mut data_snapshot).await?;
-    let _results = run_updates(&google_config,&data_snapshot).await?;
 
     println!("End sync_contacts");
     Ok(())

@@ -1,4 +1,7 @@
+use std::cmp::min;
+// use futures::SinkExt;
 use reqwest::{Client};
+use serde::Serialize;
 use crate::datasource::contact;
 use crate::datasource::contact::*;
 
@@ -20,60 +23,44 @@ pub enum Operation{
     Update,
     Delete
 }
-pub async fn send_google_contacts(username: &str,contact_list:Option<&Vec<GooglePerson>>,
-                                  resource_name_list:Option<&Vec<String>>,operation:Operation)
+
+pub async fn send_google_contacts<T: Serialize>(operation:Operation,username: &str,full_list:&Vec<T>,list_limit:usize)
     ->Result<(),Box<dyn std::error::Error>>{
     let client  = Client::new();
-    // let mut json_str =String::new();
-    let request_builder = match operation{
-        Operation::Add => {
-            let url = String::from("http://127.0.0.1:8340/AddContacts/")+username;
-            let request_builder = client.post(url);
-            let json_list = contact_list.unwrap();
-            // let json_str = serde_json::to_string(&json_list).unwrap().clone();
-            // println!("Sending JSON {:?}",&json_str);
-            // println!("Sending JSON2 {:?}",json_list);
-            request_builder.body(serde_json::to_string(&json_list).unwrap())
-            // request_builder.json(&json_list)
-        },
-        Operation::Update =>{
-            let url = String::from("http://127.0.0.1:8340/UpdateContacts/")+username;
-            let request_builder = client.post(url);
-            let json_list = contact_list.unwrap();
-            // let  json_str = serde_json::to_string(&json_list).unwrap().clone();
-            // println!("Sending JSON {:?}",&json_str);
-            // println!("Sending JSON2 {:?}",serde_json::to_string(&json_list).unwrap());
-            request_builder.body(serde_json::to_string(&json_list).unwrap())
-            // request_builder.json(&json_list)
-        },
-        Operation::Delete => {
-            let url = String::from("http://127.0.0.1:8340/DeleteContacts/")+username;
-            let request_builder = client.post(url);
-            let json_list = resource_name_list.unwrap();
-            // println!("Sending JSON {:?}",json_list);
-            request_builder.json(&json_list)
-        }
+    let vec_size = full_list.len();
+    let mut start = 0;
+    let mut end = min(start + list_limit,vec_size);
+    let uri = match operation {
+        Operation::Add => "AddContacts",
+        Operation::Update => "UpdateContacts",
+        Operation::Delete => "DeleteContacts"
     };
-    // let request_builder = client.post(url);
-    // println!("Sending JSON {:?}",contact_list);
-    let response = request_builder.send().await;
-    match response{
-        Ok(response) => {
-            let body = response.text().await;
-            match body{
-                Ok(body) => {
-                    println!("Server response: {}",body);
-                },
-                Err(e) => {
-                    println!("Body error {}",e);
+    while start<end {
+        println!("Submitting to Google sublist from index {} to {}",start,end);
+        let sub_list = &full_list[start..end];
+        start = min(end, full_list.len());
+        end = min(start + list_limit, full_list.len());
+        let request_builder = client.post(String::from("http://127.0.0.1:8340/".to_owned() +uri+"/"+username));
+        let response = request_builder.body(serde_json::to_string(&sub_list).unwrap()).send().await;
+        match response{
+            Ok(response) => {
+                let body = response.text().await;
+                match body{
+                    Ok(body) => {
+                        println!("Server response: {}",body);
+                    },
+                    Err(e) => {
+                        println!("Body error {}",e);
+                    }
                 }
-            }
 
-        },
-        Err(error) => {
-            println!("Response error {}",error);
+            },
+            Err(error) => {
+                println!("Response error {}",error);
+            }
         }
     }
+
     Ok(())
 }
 

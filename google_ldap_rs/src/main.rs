@@ -7,7 +7,7 @@ mod datasource;
 //use std::path::{ Path,PathBuf};
 //use rocket::Error;
 //use rocket::fs::NamedFile;
-use rocket::fs::FileServer;
+// use rocket::fs::FileServer;
 //use rocket::tokio::time::{sleep,Duration };
 // use std::fs;
 // use serde::{Serialize,Deserialize};
@@ -36,8 +36,8 @@ async fn sync(){
 #[launch]
 fn rocket() -> _ {
     rocket::build().
-        mount("/", routes![index,sync]).
-        mount("/public", FileServer::from("www/static"))
+        mount("/", routes![index,sync])
+        //.mount("/public", FileServer::from("www/static"))
 }
 
  // fn main() {
